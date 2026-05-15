@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Classes</div>
+    <div class="page-subtitle">{{ classes|length }} class{{ 'es' if classes|length != 1 else '' }} total</div>
+  </div>
+  <a href="{{ url_for('add_class') }}" class="btn-accent">
+    <i class="bi bi-plus-lg"></i> Create Class
+  </a>
+</div>
+
+{% if classes %}
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+  {% for c in classes %}
+  <div class="a-card" style="position: relative; overflow: hidden;">
+    <!-- Decorative accent line -->
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), #a78bfa);"></div>
+
+    <div style="margin-bottom: 16px; margin-top: 8px;">
+      <div style="font-size: 28px; margin-bottom: 10px;">🏫</div>
+      <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em;">{{ c.class_name }}</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+      <div style="background: var(--accent-soft); border: 1px solid rgba(124,106,247,0.2); border-radius: 8px; padding: 4px 12px; font-size: 0.82rem; font-weight: 600; color: var(--accent);">
+        <i class="bi bi-people-fill me-1"></i> {{ c.students|length }} student{{ 's' if c.students|length != 1 else '' }}
+      </div>
+    </div>
+
+    <a href="{{ url_for('class_details', id=c.id) }}" class="btn-accent" style="width: 100%; justify-content: center;">
+      Open Class <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="a-card" style="text-align: center; padding: 60px 24px;">
+  <div style="font-size: 48px; margin-bottom: 16px;">🏫</div>
+  <div style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">No classes yet</div>
+  <div style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 24px;">Create your first class to get started</div>
+  <a href="{{ url_for('add_class') }}" class="btn-accent">
+    <i class="bi bi-plus-lg"></i> Create Class
+  </a>
+</div>
+{% endif %}
+
+{% endblock %}

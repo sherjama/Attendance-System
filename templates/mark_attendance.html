@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block content %}
+
+<div style="max-width: 520px;">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Mark Attendance</div>
+      <div class="page-subtitle">Record student attendance for a date</div>
+    </div>
+    <a href="{{ url_for('attendance') }}" class="btn-outline">
+      <i class="bi bi-calendar3"></i> View Calendar
+    </a>
+  </div>
+
+  <div class="a-card">
+    <form method="POST">
+
+      <div style="margin-bottom: 20px;">
+        <label class="a-label">Select Student</label>
+        <select name="student_id" class="a-input" required>
+          <option value="" disabled selected>Choose a student...</option>
+          {% for student in students %}
+          <option value="{{ student.id }}">{{ student.name }} — {{ student.classroom.class_name if student.classroom else 'No Class' }}</option>
+          {% endfor %}
+        </select>
+        {% if not students %}
+        <div style="font-size: 0.78rem; color: var(--accent-amber); margin-top: 6px;">
+          <i class="bi bi-exclamation-triangle"></i> No students found. <a href="{{ url_for('classes') }}" style="color: var(--accent);">Add students first.</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label class="a-label">Date</label>
+        <input type="date" name="date" class="a-input" required />
+      </div>
+
+      <div style="margin-bottom: 28px;">
+        <label class="a-label">Status</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
+          <label style="cursor: pointer;">
+            <input type="radio" name="status" value="Present" style="display: none;" id="statusPresent" checked />
+            <div class="status-option" id="labelPresent" style="border: 2px solid var(--accent-green); background: rgba(34,197,94,0.08); border-radius: 10px; padding: 14px; text-align: center; transition: all 0.2s;">
+              <div style="font-size: 22px; margin-bottom: 4px;">✅</div>
+              <div style="font-weight: 600; font-size: 0.9rem; color: var(--accent-green);">Present</div>
+            </div>
+          </label>
+          <label style="cursor: pointer;">
+            <input type="radio" name="status" value="Absent" style="display: none;" id="statusAbsent" />
+            <div class="status-option" id="labelAbsent" style="border: 2px solid var(--border); background: transparent; border-radius: 10px; padding: 14px; text-align: center; transition: all 0.2s;">
+              <div style="font-size: 22px; margin-bottom: 4px;">❌</div>
+              <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-secondary);">Absent</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-accent" style="width: 100%; justify-content: center; padding: 13px; font-size: 0.95rem;" {% if not students %}disabled{% endif %}>
+        <i class="bi bi-check2-square"></i> Save Attendance
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Radio visual toggle
+  const presentRadio = document.getElementById('statusPresent');
+  const absentRadio = document.getElementById('statusAbsent');
+  const labelPresent = document.getElementById('labelPresent');
+  const labelAbsent = document.getElementById('labelAbsent');
+
+  function updateStatus() {
+    if (presentRadio.checked) {
+      labelPresent.style.borderColor = 'var(--accent-green)';
+      labelPresent.style.background = 'rgba(34,197,94,0.08)';
+      labelAbsent.style.borderColor = 'var(--border)';
+      labelAbsent.style.background = 'transparent';
+    } else {
+      labelAbsent.style.borderColor = 'var(--accent-red)';
+      labelAbsent.style.background = 'rgba(239,68,68,0.08)';
+      labelPresent.style.borderColor = 'var(--border)';
+      labelPresent.style.background = 'transparent';
+    }
+  }
+
+  presentRadio.addEventListener('change', updateStatus);
+  absentRadio.addEventListener('change', updateStatus);
+
+  // Set today's date by default
+  const dateInput = document.querySelector('input[name="date"]');
+  if (dateInput && !dateInput.value) {
+    dateInput.value = new Date().toISOString().split('T')[0];
+  }
+</script>
+
+{% endblock %}

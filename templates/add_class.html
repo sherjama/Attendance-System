@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block content %}
+
+<div style="max-width: 480px;">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Create Class</div>
+      <div class="page-subtitle">Add a new class to your system</div>
+    </div>
+    <a href="{{ url_for('classes') }}" class="btn-outline">
+      <i class="bi bi-arrow-left"></i> Back
+    </a>
+  </div>
+
+  <div class="a-card">
+    <form method="POST">
+      <div style="margin-bottom: 24px;">
+        <label class="a-label">Class Name</label>
+        <input type="text" name="class_name" class="a-input" placeholder="e.g. Class 10A, Science Batch..." required />
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px;">Give a descriptive name for easy identification</div>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <button type="submit" class="btn-accent" style="flex: 1; justify-content: center; padding: 12px;">
+          <i class="bi bi-check-lg"></i> Create Class
+        </button>
+        <a href="{{ url_for('classes') }}" class="btn-outline" style="padding: 12px 20px;">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

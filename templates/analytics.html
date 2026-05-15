@@ -1,0 +1,54 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Analytics</div>
+    <div class="page-subtitle">Attendance overview and insights</div>
+  </div>
+  <a href="{{ url_for('download_report') }}" class="btn-outline">
+    <i class="bi bi-file-earmark-pdf"></i> Download PDF
+  </a>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+
+  <!-- Chart -->
+  <div class="a-card" style="text-align: center;">
+    <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 20px; text-align: left;">Attendance Distribution</div>
+    <img src="/{{ chart }}" style="max-width: 100%; border-radius: 12px;" alt="Attendance Chart" />
+  </div>
+
+  <!-- Info -->
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="a-card" style="border-left: 4px solid var(--accent-green);">
+      <div style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Present Records</div>
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-green); letter-spacing: -0.03em;">—</div>
+      <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">See chart for percentage</div>
+    </div>
+
+    <div class="a-card" style="border-left: 4px solid var(--accent-red);">
+      <div style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Absent Records</div>
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-red); letter-spacing: -0.03em;">—</div>
+      <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">See chart for percentage</div>
+    </div>
+
+    <div class="a-card" style="background: var(--accent-soft); border-color: rgba(124,106,247,0.2);">
+      <div style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 12px;">
+        <i class="bi bi-info-circle me-1"></i> The pie chart refreshes each time you visit this page with the latest data.
+      </div>
+      <a href="{{ url_for('attendance') }}" class="btn-accent" style="font-size: 0.85rem; padding: 9px 16px;">
+        <i class="bi bi-calendar3"></i> View Attendance Calendar
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+{% endblock %}

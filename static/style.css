@@ -1,0 +1,68 @@
+body {
+  background: #f4f7fc;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.card {
+  border-radius: 20px;
+}
+
+.navbar {
+  padding: 15px 0;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.btn {
+  border-radius: 12px;
+}
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.fc-toolbar-title {
+  font-size: 28px !important;
+  font-weight: bold;
+}
+
+.fc-daygrid-day {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.fc-daygrid-day:hover {
+  background: #eef4ff;
+}
+
+.student-box {
+  padding: 18px;
+  border-radius: 14px;
+}
+
+.success-box {
+  background: #e8fff1;
+  border-left: 5px solid green;
+}
+
+.danger-box {
+  background: #ffecec;
+  border-left: 5px solid red;
+}
+
+#calendar {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.fc-event {
+  font-size: 12px !important;
+  padding: 2px !important;
+  border-radius: 4px !important;
+}

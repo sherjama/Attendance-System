@@ -1,0 +1,74 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Attendance Calendar</div>
+    <div class="page-subtitle">Click a date to view details</div>
+  </div>
+  <a href="{{ url_for('mark_attendance') }}" class="btn-accent">
+    <i class="bi bi-plus-lg"></i> Mark Attendance
+  </a>
+</div>
+
+<!-- Legend -->
+<div style="display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
+  <div style="display: flex; align-items: center; gap: 8px; font-size: 0.83rem; color: var(--text-secondary);">
+    <div style="width: 12px; height: 12px; border-radius: 3px; background: #22c55e;"></div> Present
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px; font-size: 0.83rem; color: var(--text-secondary);">
+    <div style="width: 12px; height: 12px; border-radius: 3px; background: #ef4444;"></div> Absent
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px; font-size: 0.83rem; color: var(--text-secondary);">
+    <i class="bi bi-hand-index" style="font-size: 14px;"></i> Click date to view
+  </div>
+</div>
+
+<div class="a-card" style="padding: 20px;">
+  <div id="calendar"></div>
+</div>
+
+<style>
+  .fc { color: var(--text-primary); font-family: 'Outfit', sans-serif; }
+  .fc-theme-standard .fc-scrollgrid { border-color: var(--border); border-radius: 8px; overflow: hidden; }
+  .fc-theme-standard td, .fc-theme-standard th { border-color: var(--border); }
+  .fc .fc-col-header-cell-cushion { color: var(--text-muted); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 10px 0; text-decoration: none; }
+  .fc .fc-daygrid-day-number { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; text-decoration: none; padding: 6px 8px; }
+  .fc .fc-daygrid-day.fc-day-today { background: rgba(124,106,247,0.07); }
+  .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number { color: var(--accent); font-weight: 700; }
+  .fc .fc-button { background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-secondary); font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 0.83rem; border-radius: 8px; padding: 6px 12px; transition: all 0.2s; }
+  .fc .fc-button:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active { background: var(--accent); border-color: var(--accent); color: white; box-shadow: none; }
+  .fc .fc-button-primary:focus { box-shadow: none; }
+  .fc .fc-toolbar-title { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+  .fc-daygrid-day-frame { background: transparent; min-height: 80px; }
+  .fc-scrollgrid-sync-inner { background: var(--bg-card); }
+  .fc .fc-daygrid-day:hover .fc-daygrid-day-frame { background: rgba(255,255,255,0.02); cursor: pointer; }
+  .fc-event { border-radius: 5px; font-size: 0.75rem; font-weight: 500; padding: 2px 6px; border: none !important; }
+  .fc-toolbar { margin-bottom: 16px !important; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const eventsData = {{ events | tojson | safe }};
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 640,
+      events: eventsData,
+      eventDisplay: 'block',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek'
+      },
+      dateClick: function(info) {
+        window.location.href = "/attendance/" + info.dateStr;
+      }
+    });
+
+    calendar.render();
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Dashboard</div>
+    <div class="page-subtitle">Welcome back, {{ current_user.username }} 👋</div>
+  </div>
+  <a href="{{ url_for('download_report') }}" class="btn-outline">
+    <i class="bi bi-file-earmark-pdf"></i> Download Report
+  </a>
+</div>
+
+<!-- STAT CARDS -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+
+  <div class="a-card" style="border-top: 3px solid var(--accent);">
+    <div class="a-card-title"><i class="bi bi-people me-1"></i> Total Students</div>
+    <div class="a-card-value">{{ total_students }}</div>
+    <div style="margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">Enrolled students</div>
+  </div>
+
+  <div class="a-card" style="border-top: 3px solid #3b82f6;">
+    <div class="a-card-title"><i class="bi bi-calendar-check me-1"></i> Total Records</div>
+    <div class="a-card-value" style="color: #3b82f6;">{{ total_attendance }}</div>
+    <div style="margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">Attendance entries</div>
+  </div>
+
+  <div class="a-card" style="border-top: 3px solid var(--accent-green);">
+    <div class="a-card-title"><i class="bi bi-check-circle me-1"></i> Present</div>
+    <div class="a-card-value" style="color: var(--accent-green);">{{ present_count }}</div>
+    <div style="margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
+      {% if total_attendance > 0 %}{{ ((present_count / total_attendance) * 100) | round(1) }}% attendance rate{% else %}No records yet{% endif %}
+    </div>
+  </div>
+
+  <div class="a-card" style="border-top: 3px solid var(--accent-red);">
+    <div class="a-card-title"><i class="bi bi-x-circle me-1"></i> Absent</div>
+    <div class="a-card-value" style="color: var(--accent-red);">{{ absent_count }}</div>
+    <div style="margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
+      {% if total_attendance > 0 %}{{ ((absent_count / total_attendance) * 100) | round(1) }}% absent rate{% else %}No records yet{% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+{% if total_attendance > 0 %}
+<div class="a-card" style="margin-bottom: 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+    <div style="font-weight: 600; font-size: 0.95rem;">Overall Attendance Rate</div>
+    <div style="font-weight: 700; color: var(--accent); font-size: 1.1rem;">{{ ((present_count / total_attendance) * 100) | round(1) }}%</div>
+  </div>
+  <div style="height: 10px; background: var(--bg-primary); border-radius: 99px; overflow: hidden;">
+    <div style="height: 100%; width: {{ ((present_count / total_attendance) * 100) | round(1) }}%; background: linear-gradient(90deg, var(--accent), var(--accent-green)); border-radius: 99px; transition: width 0.8s ease;"></div>
+  </div>
+  <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+    <span style="font-size: 0.78rem; color: var(--accent-green); font-weight: 500;"><i class="bi bi-circle-fill" style="font-size: 8px;"></i> Present: {{ present_count }}</span>
+    <span style="font-size: 0.78rem; color: var(--accent-red); font-weight: 500;"><i class="bi bi-circle-fill" style="font-size: 8px;"></i> Absent: {{ absent_count }}</span>
+  </div>
+</div>
+{% endif %}
+
+<!-- QUICK ACTIONS -->
+<div style="margin-bottom: 8px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);">Quick Actions</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+  <a href="{{ url_for('mark_attendance') }}" class="a-card" style="text-decoration: none; cursor: pointer; text-align: center; padding: 20px;">
+    <div style="font-size: 28px; margin-bottom: 8px;">✅</div>
+    <div style="font-weight: 600; font-size: 0.9rem;">Mark Attendance</div>
+  </a>
+  <a href="{{ url_for('classes') }}" class="a-card" style="text-decoration: none; cursor: pointer; text-align: center; padding: 20px;">
+    <div style="font-size: 28px; margin-bottom: 8px;">🏫</div>
+    <div style="font-weight: 600; font-size: 0.9rem;">Manage Classes</div>
+  </a>
+  <a href="{{ url_for('attendance') }}" class="a-card" style="text-decoration: none; cursor: pointer; text-align: center; padding: 20px;">
+    <div style="font-size: 28px; margin-bottom: 8px;">📅</div>
+    <div style="font-weight: 600; font-size: 0.9rem;">View Calendar</div>
+  </a>
+  <a href="{{ url_for('analytics') }}" class="a-card" style="text-decoration: none; cursor: pointer; text-align: center; padding: 20px;">
+    <div style="font-size: 28px; margin-bottom: 8px;">📊</div>
+    <div style="font-weight: 600; font-size: 0.9rem;">Analytics</div>
+  </a>
+</div>
+
+{% endblock %}

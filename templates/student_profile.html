@@ -1,0 +1,96 @@
+{% extends 'base.html' %} {% block content %}
+
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;">
+  <a href="{{ url_for('students') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.88rem;">Students</a>
+  <i class="bi bi-chevron-right" style="color: var(--text-muted); font-size: 12px;"></i>
+  <span style="color: var(--text-secondary); font-size: 0.88rem;">{{ student.name }}</span>
+</div>
+
+<div style="display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start;">
+
+  <!-- LEFT: Profile Card -->
+  <div class="a-card" style="text-align: center; padding: 36px 24px;">
+    <div style="width: 80px; height: 80px; background: var(--accent-soft); border: 2px solid rgba(124,106,247,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; color: var(--accent); margin: 0 auto 16px;">
+      {{ student.name[0].upper() }}
+    </div>
+
+    <div style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 6px;">{{ student.name }}</div>
+
+    <div style="display: inline-flex; align-items: center; gap: 6px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); margin-bottom: 12px;">
+      Roll: {{ student.roll_number }}
+    </div>
+
+    <div style="color: var(--text-muted); font-size: 0.85rem;">
+      <i class="bi bi-building me-1"></i>
+      {{ student.classroom.class_name if student.classroom else 'No Class' }}
+    </div>
+
+    <div style="height: 1px; background: var(--border); margin: 20px 0;"></div>
+
+    <a href="{{ url_for('delete_student', id=student.id) }}" class="btn-danger-soft" style="width: 100%; justify-content: center;" onclick="return confirm('Delete {{ student.name }}?')">
+      <i class="bi bi-trash"></i> Delete Student
+    </a>
+  </div>
+
+  <!-- RIGHT: Stats -->
+  <div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 20px;">
+      <div class="a-card" style="text-align: center; border-top: 3px solid var(--accent-green);">
+        <div style="font-size: 2rem; font-weight: 800; color: var(--accent-green);">{{ present_count }}</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; font-weight: 500;">Present</div>
+      </div>
+      <div class="a-card" style="text-align: center; border-top: 3px solid var(--accent-red);">
+        <div style="font-size: 2rem; font-weight: 800; color: var(--accent-red);">{{ absent_count }}</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; font-weight: 500;">Absent</div>
+      </div>
+      <div class="a-card" style="text-align: center; border-top: 3px solid var(--accent);">
+        <div style="font-size: 2rem; font-weight: 800; color: var(--accent);">{{ total_attendance }}</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; font-weight: 500;">Total</div>
+      </div>
+    </div>
+
+    <!-- Attendance Rate -->
+    {% if total_attendance > 0 %}
+    <div class="a-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <div style="font-weight: 600;">Attendance Rate</div>
+        <div style="font-weight: 800; font-size: 1.3rem;
+          color: {% if (present_count / total_attendance * 100) >= 75 %}var(--accent-green){% elif (present_count / total_attendance * 100) >= 50 %}var(--accent-amber){% else %}var(--accent-red){% endif %};">
+          {{ ((present_count / total_attendance) * 100) | round(1) }}%
+        </div>
+      </div>
+      <div style="height: 10px; background: var(--bg-primary); border-radius: 99px; overflow: hidden;">
+        <div style="height: 100%; width: {{ ((present_count / total_attendance) * 100) | round(1) }}%;
+          background: {% if (present_count / total_attendance * 100) >= 75 %}var(--accent-green){% elif (present_count / total_attendance * 100) >= 50 %}var(--accent-amber){% else %}var(--accent-red){% endif %};
+          border-radius: 99px;"></div>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+        {% set rate = (present_count / total_attendance * 100) | round(1) %}
+        {% if rate >= 75 %}
+          <i class="bi bi-check-circle-fill" style="color: var(--accent-green);"></i> Good attendance — keep it up!
+        {% elif rate >= 50 %}
+          <i class="bi bi-exclamation-circle-fill" style="color: var(--accent-amber);"></i> Attendance needs improvement
+        {% else %}
+          <i class="bi bi-x-circle-fill" style="color: var(--accent-red);"></i> Critical — attendance very low
+        {% endif %}
+      </div>
+    </div>
+    {% else %}
+    <div class="a-card" style="text-align: center; padding: 40px 24px;">
+      <div style="font-size: 36px; margin-bottom: 12px;">📋</div>
+      <div style="color: var(--text-muted); font-size: 0.88rem;">No attendance records yet</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Mobile: stack columns -->
+<style>
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns: 300px 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+{% endblock %}
